@@ -1,6 +1,6 @@
 FROM docker.io/library/ubuntu:22.04
 # Mapshot version, "X.Y.Z"
-ENV MAPSHOT_VERSION=0.0.14
+ENV MAPSHOT_VERSION=0.0.15
 
 # xvfb, tini for container
 # xz-utils for build
