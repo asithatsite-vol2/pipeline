@@ -1,2 +1,2 @@
 #!/usr/bin/sh
-exec mapshot --logtostderr render "$*"
+exec mapshot --logtostderr --factorio_verbose render "$*"

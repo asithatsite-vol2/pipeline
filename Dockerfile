@@ -22,5 +22,4 @@ RUN chmod a+x /usr/local/bin/mapshot /usr/local/bin/mapshot-render
 VOLUME /opt/factorio/saves
 VOLUME /opt/factorio/script-output
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/usr/bin/xvfb-run", "--"]
-CMD ["render"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/bin/xvfb-run", "--server-args=-fbdir /tmp", "--error-file", "/dev/stdout", "--"]
