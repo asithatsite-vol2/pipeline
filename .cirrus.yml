@@ -1,0 +1,29 @@
+# This unfortunately must be named this.
+
+env:
+  AMP_INSTANCE=space-factory
+
+import_docker_builder:
+  # Run directly on the system to snag the AMP data
+  freshen_step:
+    # Remove previous run stuff
+    - rm -rf tmp
+  snag_step:
+    # Copy and extract the backup
+    - mkdir tmp
+    - unzip ~amp/.ampdata/instances/$AMP_INSTANCE/Backups/$filename -d ./tmp
+
+mapshot_task:
+  depends_on:
+    - import
+  container:
+    dockerfile: mapshot.Dockerfile
+  setup_step:
+    # Take the data in tmp and put it in places mapshot is happy with
+    - cp tmp/config/mods/* /opt/factorio/mods
+    - cp tmp/saves/* /opt/factorio/saves
+  map_step:
+    # Actually render the map
+    - mapshot-render $(basename $(find saves -type f -exec stat -c '%X %n' {} \; | sort -nr | head -n 1 | cut -d ' ' -f 2))
+
+# TODO: Surfaces generation?

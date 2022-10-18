@@ -12,12 +12,13 @@ RUN --mount=type=cache,target=/var/lib/apt apt-get update && apt-get install -y 
 COPY factorio.tar.xz /tmp/factorio.tar.xz
 RUN tar -xaf /tmp/factorio.tar.xz -C /opt
 RUN rm /tmp/*
-COPY mods /opt/factorio/mods
 
 # Set up mapshot
 ADD https://github.com/Palats/mapshot/releases/download/${MAPSHOT_VERSION}/mapshot-linux /usr/local/bin/mapshot
 COPY mapshot-render.sh /usr/local/bin/mapshot-render
 RUN chmod a+x /usr/local/bin/mapshot /usr/local/bin/mapshot-render
+
+# COPY mods /opt/factorio/mods
 
 VOLUME /opt/factorio/saves
 VOLUME /opt/factorio/script-output
