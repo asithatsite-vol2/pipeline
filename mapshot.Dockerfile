@@ -5,8 +5,11 @@ ENV MAPSHOT_VERSION=0.0.15
 # xvfb, tini for container
 # xz-utils for build
 # libx*, etc for factorio
-RUN --mount=type=cache,target=/var/lib/apt apt-get update && apt-get install -y \
-  xvfb xz-utils tini libxinerama1 libxrandr2 libxcursor1 libasound2 libpulse0
+# Python for CI later
+# TODO:BUILDX: --mount=type=cache,target=/var/lib/apt
+RUN apt-get update && apt-get install -y \
+  xvfb xz-utils tini python3 libxinerama1 libxrandr2 libxcursor1 libasound2 libpulse0 \
+  && rm -rf /var/lib/apt
 
 # Set up factorio
 COPY factorio.tar.xz /tmp/factorio.tar.xz

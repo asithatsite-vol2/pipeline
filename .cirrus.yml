@@ -1,7 +1,7 @@
 # This unfortunately must be named this.
 
 env:
-  AMP_INSTANCE=space-factory
+  AMP_INSTANCE: space-factory
 
 import_docker_builder:
   # Run directly on the system to snag the AMP data
@@ -25,5 +25,9 @@ mapshot_task:
   map_step:
     # Actually render the map
     - mapshot-render $(basename $(find saves -type f -exec stat -c '%X %n' {} \; | sort -nr | head -n 1 | cut -d ' ' -f 2))
+    - python3 ./post-filter.py /opt/factorio/script-output
+    - mv /opt/factorio/script-output/mapshot/ mapshot/
+  map_artifacts:
+    path: "mapshot/**"
 
 # TODO: Surfaces generation?
