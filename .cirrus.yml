@@ -5,10 +5,10 @@ env:
 
 import_docker_builder:
   # Run directly on the system to snag the AMP data
-  freshen_step:
+  freshen_script:
     # Remove previous run stuff
     - rm -rf tmp
-  snag_step:
+  snag_script:
     # Copy and extract the backup
     - mkdir tmp
     - unzip ~amp/.ampdata/instances/$AMP_INSTANCE/Backups/$filename -d ./tmp
@@ -18,13 +18,14 @@ mapshot_task:
     - import
   container:
     dockerfile: mapshot.Dockerfile
-  setup_step:
+  setup_script:
     # Take the data in tmp and put it in places mapshot is happy with
+    - mkdir -p /opt/factorio/mods /opt/factorio/saves
     - cp tmp/config/mods/* /opt/factorio/mods
     - cp tmp/saves/* /opt/factorio/saves
-  map_step:
+  gen_script:
     # Actually render the map
-    - mapshot-render $(basename $(find saves -type f -exec stat -c '%X %n' {} \; | sort -nr | head -n 1 | cut -d ' ' -f 2))
+    - mapshot-render $(basename $(find /opt/factorio/saves -type f -exec stat -c '%X %n' {} \; | sort -nr | head -n 1 | cut -d ' ' -f 2))
     - python3 ./post-filter.py /opt/factorio/script-output
     - mv /opt/factorio/script-output/mapshot/ mapshot/
   map_artifacts:
