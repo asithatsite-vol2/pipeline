@@ -35,4 +35,14 @@ mapshot_task:
   map_artifacts:
     path: "mapshot/**"
 
+
 # TODO: Surfaces generation?
+
+
+deploy_docker_builder:
+  depends_on:
+    - mapshot
+  # Run directly on the system to deploy to the website
+  deploy_script:
+    # TODO: actually deploy
+    - du -h mapshot
