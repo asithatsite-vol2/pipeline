@@ -4,7 +4,7 @@ ENV MAPSHOT_VERSION=0.0.15
 
 # xvfb, tini for container
 # xz-utils for build
-# libx*, etc for factorio
+# libx*, libpulse0 for factorio
 # Python for CI later
 # TODO:BUILDX: --mount=type=cache,target=/var/lib/apt
 RUN apt-get update && apt-get install -y \
@@ -26,4 +26,5 @@ RUN chmod a+x /usr/local/bin/mapshot /usr/local/bin/mapshot-render
 VOLUME /opt/factorio/saves
 VOLUME /opt/factorio/script-output
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/usr/bin/xvfb-run", "--server-args=-fbdir /tmp", "--error-file", "/dev/stdout", "--"]
+# Cirrus CI ignores this, but it's pretty useful if you're running the container on its own.
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/bin/xvfb-run", "--server-args=-fbdir /tmp +extension GLX +render", "--error-file", "/dev/stdout", "--"]

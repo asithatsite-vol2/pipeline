@@ -12,6 +12,8 @@ import_docker_builder:
     # Copy and extract the backup
     - mkdir tmp
     - unzip ~amp/.ampdata/instances/$AMP_INSTANCE/Backups/$filename -d ./tmp
+    # - unzip amp-backup.zip -d ./tmp
+
 
 mapshot_task:
   depends_on:
@@ -19,13 +21,14 @@ mapshot_task:
   container:
     dockerfile: mapshot.Dockerfile
   setup_script:
+    - python3 ./pre-filter.py --mods=tmp/config/mods
     # Take the data in tmp and put it in places mapshot is happy with
     - mkdir -p /opt/factorio/mods /opt/factorio/saves
     - cp tmp/config/mods/* /opt/factorio/mods
     - cp tmp/saves/* /opt/factorio/saves
   gen_script:
-    # Actually render the map
-    - mapshot-render $(basename $(find /opt/factorio/saves -type f -exec stat -c '%X %n' {} \; | sort -nr | head -n 1 | cut -d ' ' -f 2))
+    # Actually render the map (Cirrus ignores entrypoint)
+    - xvfb-run "--server-args=+extension GLX +render" --error-file /dev/stdout -- mapshot-render
     - python3 ./post-filter.py /opt/factorio/script-output
     - mv /opt/factorio/script-output/mapshot/ mapshot/
   map_artifacts:
