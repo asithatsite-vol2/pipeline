@@ -28,9 +28,10 @@ mapshot_task:
     - cp tmp/saves/* /opt/factorio/saves
   gen_script:
     # Actually render the map (Cirrus ignores entrypoint)
-    - xvfb-run "--server-args=+extension GLX +render" --error-file /dev/stdout -- mapshot-render
-    - python3 ./post-filter.py /opt/factorio/script-output
-    - mv /opt/factorio/script-output/mapshot/ mapshot/
+    - xvfb-run "--server-args=-fbdir ./tmp +extension GLX +render" --error-file /dev/stdout -- mapshot-render || true
+    # FIXME: Autodetect specific root
+    - python3 ./post-filter.py /opt/factorio/script-output/mapshot/default/
+    - mv /opt/factorio/script-output/mapshot/default/ mapshot/
   map_artifacts:
     path: "mapshot/**"
 
